@@ -29,7 +29,7 @@ st.markdown("""
 # Cache para carregamento de dados
 @st.cache_data
 def load_data():
-    df = pd.read_csv('/home/ubuntu/upload/dados-imersao-final.csv')
+    df = pd.read_csv('../dados/salarios_dados.csv')
     # Renomear colunas para facilitar
     df.columns = [
         'ano', 'nivel_experiencia', 'tipo_contrato', 'cargo', 'salario', 
