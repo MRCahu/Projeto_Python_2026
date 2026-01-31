@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-import plotly.graph_objects as go
+from pathlib import Path
 
 # Configuração da Página
 st.set_page_config(
@@ -29,7 +29,8 @@ st.markdown("""
 # Cache para carregamento de dados
 @st.cache_data
 def load_data():
-    df = pd.read_csv('../dados/salarios_dados.csv')
+    data_path = Path(__file__).resolve().parent / ".." / "dados" / "salarios_dados.csv"
+    df = pd.read_csv(data_path)
     # Renomear colunas para facilitar
     df.columns = [
         'ano', 'nivel_experiencia', 'tipo_contrato', 'cargo', 'salario', 
@@ -47,6 +48,14 @@ niveis = st.sidebar.multiselect("Nível de Experiência", options=df['nivel_expe
 
 # Filtragem
 df_filtered = df[(df['ano'].isin(anos)) & (df['nivel_experiencia'].isin(niveis))]
+
+if not anos or not niveis:
+    st.warning("Selecione ao menos um ano e um nível de experiência para visualizar os dados.")
+    st.stop()
+
+if df_filtered.empty:
+    st.warning("Nenhum dado encontrado para os filtros selecionados.")
+    st.stop()
 
 # --- HEADER ---
 st.title("📊 Data Salary Insights Dashboard")
